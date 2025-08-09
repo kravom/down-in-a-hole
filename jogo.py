@@ -11,7 +11,7 @@ relogio = pygame.time.Clock()
 # Cria o jogador
 riven = Player()
 # define o png fundo
-mapa = Mapa('images/riven-parado.png')
+mapa = Mapa('images/background.png')
 
 executando = True
 while executando:
@@ -26,10 +26,12 @@ while executando:
     # Cor: marrom escuro
     cor_chao = (139, 69, 19)
     # Desenha o chão
-    qua = pygame.draw.rect(tela, cor_chao, (0, 600, 1000, 250))  # chão com altura de 100px
+    plat1 = pygame.draw.rect(tela, cor_chao, (0, 600, 100, 250))  # chão com altura de 100px
+    
+    plat2 = pygame.draw.rect(tela, cor_chao, (200, 300, 100, 250))  # chão com altura de 100px
     
     # Lista de objetos para colisão
-    objetos_colisao = [qua]
+    objetos_colisao = [ plat1, plat2 ]
 
     # Move o personagem considerando colisão
     riven.mover(teclas, objetos_colisao)
