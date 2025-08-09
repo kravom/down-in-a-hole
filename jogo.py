@@ -9,7 +9,9 @@ tela = pygame.display.set_mode((1000, 700), pygame.RESIZABLE)
 pygame.display.set_caption('Down In A Hole')
 relogio = pygame.time.Clock()
 # Cria o jogador
-riven = Player()
+riven = Player(r'images\riven-parado.png')
+
+second_player = Player(r'images\basic-guitar.png')
 # define o png fundo
 mapa = Mapa('images/background.png')
 
@@ -28,7 +30,7 @@ while executando:
     # Desenha o chão
     plat1 = pygame.draw.rect(tela, cor_chao, (0, 600, 100, 250))  # chão com altura de 100px
     
-    plat2 = pygame.draw.rect(tela, cor_chao, (200, 300, 100, 250))  # chão com altura de 100px
+    plat2 = pygame.draw.rect(tela, cor_chao, (200, 600, 500, 250))  # chão com altura de 100px
     
     # Lista de objetos para colisão
     objetos_colisao = [ plat1, plat2 ]
@@ -38,6 +40,7 @@ while executando:
    
     # Desenha o personagem
     riven.desenhar(tela)
+    second_player.desenhar(tela)
 
     # Desenha hitbox do personagem
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)

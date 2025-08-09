@@ -1,8 +1,8 @@
 import pygame
 
 class Player:
-    def __init__(self):
-        self.imagem = pygame.image.load(r'images\riven-parado.png')
+    def __init__(self, image):
+        self.imagem = pygame.image.load(image)
         self.imagem = pygame.transform.scale(self.imagem, (50, 65))
         self.pos_x = 10
         self.pos_y = 535
