@@ -1,4 +1,4 @@
-import pygame
+from settings import *
 class Mapa:
     def __init__(self, background_path):
         self.background = pygame.image.load(background_path).convert()
