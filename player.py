@@ -1,10 +1,9 @@
-import pygame
 from settings import *
 
 class Player:
     def __init__(self):
         
-        # Carregar frames originais (não transformados)
+        # Carregar frames 
         sprite_wid = 100
         sprite_hei = 110
       
@@ -17,10 +16,10 @@ class Player:
             pygame.image.load('rivem_ani/3_riven_moviment.png'),(sprite_wid, sprite_hei)),
         ]
 
-        # Escalar frames para o tamanho desejado
+        # Escalar frames para o tamanho
         self.frames_right = [pygame.transform.scale(frame, (sprite_wid, sprite_hei)) for frame in frames_right_orig]
 
-        # Criar frames para esquerda com flip horizontal (feito uma vez)
+        # Criar frames para esquerda com flip horizontal
         self.frames_left = [pygame.transform.flip(frame, True, False) for frame in self.frames_right]
 
         # Frame de pulo (escalado)
