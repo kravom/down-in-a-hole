@@ -37,11 +37,11 @@ while executando:
         screen_death.paint(tela)
         #png riven
         tela.blit(riven_dead, ((WINDOW_WIDTH // 2+40), (WINDOW_HEIGHT // 2+100)))
-        font = pygame.font.Font(None, 100)  # Cria a fonte
+        font = pygame.font.Font('font\WOODCUT.TTF', 100)  # Cria a fonte
         text = font.render("GAME-OVER", True, (139, 0, 0))  # Renderiza o texto
         text2 = font.render("Pressione R para continuar", True, (139, 0, 0))
-        tela.blit(text, ((WINDOW_WIDTH // 2-100), (WINDOW_HEIGHT // 2-100)))  # Desenha na tela
-        tela.blit(text2, ((WINDOW_WIDTH // 2-300), (WINDOW_HEIGHT // 2-30)))
+        tela.blit(text, ((WINDOW_WIDTH // 2-410), (WINDOW_HEIGHT // 2-200)))  # Desenha na tela
+        tela.blit(text2, ((WINDOW_WIDTH // 2-580), (WINDOW_HEIGHT // 2-30)))
         relogio.tick(10)
         pygame.display.flip()
         #R retorna o jogo após a morte
