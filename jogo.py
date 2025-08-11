@@ -61,7 +61,7 @@ while executando:
         # Cor: marrom escuro
         cor_chao = (139, 69, 19)
         # Desenha o chão
-        teto1 = pygame.draw.rect(tela, cor_chao, (200, 250, 600, 150))
+        teto1 = pygame.draw.rect(tela, cor_chao, (700, 390, 100, 90))
         plat1 = pygame.draw.rect(tela, cor_chao, (0, 600, 100, 250))  # chão com altura de 100px
         plat2 = pygame.draw.rect(tela, cor_chao, (200, 600, 500, 250))  # chão com altura de 100px
 
