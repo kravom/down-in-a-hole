@@ -69,22 +69,35 @@ def handle_death_screen(teclas):
     if teclas[pygame.K_r]:
         death = False
         reset_player()
-
+  
 def draw_world(camera_x):
+    cor = (250, 0, 0)
     mapa_fundo.paint(tela)
 
-    # Subtraia o deslocamento para simular movimento da câmera
+   
+    
+    teto2 = pygame.Rect(-510 - camera_x, 250, 500, 400)
+    textura_teto2 = pygame.image.load('images/barreira\olho_barreira.png').convert_alpha()
+    textura_teto2 = pygame.transform.scale(textura_teto2, (teto2.width, teto2.height))
+    tela.blit(textura_teto2, teto2.topleft)
+   
+
     teto1 = pygame.Rect(700 - camera_x, 500, 100, 90)
-    textura_teto1 = pygame.image.load('images/pixil-frame-0.png').convert_alpha()
+    textura_teto1 = pygame.image.load('images/plat.papelao.png').convert_alpha()
     textura_teto1 = pygame.transform.scale(textura_teto1, (teto1.width, teto1.height))
     tela.blit(textura_teto1, teto1.topleft)
 
     plat1 = pygame.Rect(0 - camera_x, 700, 1500, 200)
-    textura_plat2 = pygame.image.load('images/chão_3-pixilart.png').convert_alpha()
-    textura_plat2 = pygame.transform.scale(textura_plat2, (plat1.width, plat1.height))
-    tela.blit(textura_plat2, plat1.topleft)
+    textura_plat1 = pygame.image.load('images/chão.png').convert_alpha()
+    textura_plat1 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    tela.blit(textura_plat1, plat1.topleft)
 
-    return [plat1, teto1]
+    plat2 = pygame.Rect(-510 - camera_x, 700, 500, 200)
+    textura_plat2 = pygame.image.load('images/chão.png').convert_alpha()
+    textura_plat2 = pygame.transform.scale(textura_plat2, (plat1.width, plat2.height))
+    tela.blit(textura_plat2, plat2.topleft)
+
+    return [plat1, teto1, plat2,teto2]
 
 
 # Loop principal
