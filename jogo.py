@@ -29,19 +29,19 @@ def camera_update(riven):
     limite_camera2 = 500
 
     if riven.pos_x > limite_camera:
-         # Player trava no limite e câmera acompanha
-        camera_x += riven.vel_x  # soma velocidade para mover mundo para esquerda
+         #trava no limite e câmera acompanha
+        camera_x += riven.vel_x  # soma velocidade para mover para esquerda
         riven.pos_x = limite_camera
         riven.rect.topleft = (riven.pos_x, riven.pos_y)
     if riven.pos_x < limite_camera2:
-        camera_x += riven.vel_x  # soma velocidade para mover mundo para direita
+        camera_x += riven.vel_x  # soma velocidade para mover para direita
         riven.pos_x = limite_camera2
         riven.rect.topleft = (riven.pos_x, riven.pos_y)
         
 
     
 def reset_player():
-    #Reseta o estado do jogador após a morte.
+    #Reseta o jogador 
     global camera_x
     riven.pos_x = 10
     riven.pos_y = 535
@@ -54,38 +54,40 @@ def reset_player():
     camera_x = 0
 
 def handle_death_screen(teclas):
-    #Exibe a tela de morte e verifica reinício
+    #Mostra a tela de morte
     global death
     tela_morte.paint(tela)
     tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
 
-    font = pygame.font.Font('font/WOODCUT.TTF', 100)
+    font = pygame.font.Font('font/WOODCUT.TTF', 120)
+    font1 = pygame.font.Font('font/WOODCUT.TTF', 40)
     text_game_over = font.render("GAME-OVER", True, (139, 0, 0))
-    text_restart = font.render("Pressione R para continuar", True, (139, 0, 0))
+    text_restart = font1.render("Pressione R para continuar", True, (139, 0, 0))
 
-    tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 410), (WINDOW_HEIGHT // 2 - 200)))
-    tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 580), (WINDOW_HEIGHT // 2 - 30)))
+    tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 490), (WINDOW_HEIGHT // 2 - 200)))
+    tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 340), (WINDOW_HEIGHT // 2 - 30)))
 
     if teclas[pygame.K_r]:
         death = False
         reset_player()
   
 def draw_world(camera_x):
-    cor = (250, 0, 0)
     mapa_fundo.paint(tela)
 
+    ba = pygame.Rect(-510 - camera_x, 250, 500, 400)
+    textura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
+    textura_ba = pygame.transform.scale(textura_ba, (ba.width, ba.height))
+    tela.blit(textura_ba, ba.topleft)
    
-    
-    teto2 = pygame.Rect(-510 - camera_x, 250, 500, 400)
-    textura_teto2 = pygame.image.load('images/barreira\olho_barreira.png').convert_alpha()
-    textura_teto2 = pygame.transform.scale(textura_teto2, (teto2.width, teto2.height))
-    tela.blit(textura_teto2, teto2.topleft)
-   
-
     teto1 = pygame.Rect(700 - camera_x, 500, 100, 90)
-    textura_teto1 = pygame.image.load('images/plat.papelao.png').convert_alpha()
+    textura_teto1 = pygame.image.load('images/plat_papelao.png').convert_alpha()
     textura_teto1 = pygame.transform.scale(textura_teto1, (teto1.width, teto1.height))
     tela.blit(textura_teto1, teto1.topleft)
+
+    teto2 = pygame.Rect(600 - camera_x, 500, 100, 90)
+    textura_teto2 = pygame.image.load('images\plat_caixa.png').convert_alpha()
+    textura_teto2 = pygame.transform.scale(textura_teto2, (teto2.width, teto2.height))
+    tela.blit(textura_teto2, teto2.topleft)
 
     plat1 = pygame.Rect(0 - camera_x, 700, 1500, 200)
     textura_plat1 = pygame.image.load('images/chão.png').convert_alpha()
@@ -93,12 +95,14 @@ def draw_world(camera_x):
     tela.blit(textura_plat1, plat1.topleft)
 
     plat2 = pygame.Rect(-510 - camera_x, 700, 500, 200)
-    textura_plat2 = pygame.image.load('images/chão.png').convert_alpha()
-    textura_plat2 = pygame.transform.scale(textura_plat2, (plat1.width, plat2.height))
+    textura_plat2 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
     tela.blit(textura_plat2, plat2.topleft)
 
-    return [plat1, teto1, plat2,teto2]
+    plat3 = pygame.Rect(2100 - camera_x, 700, 1500, 200)
+    textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    tela.blit(textura_plat3, plat3.topleft)
 
+    return [plat1, teto1, ba, plat3, teto2]
 
 # Loop principal
 
