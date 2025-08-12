@@ -20,8 +20,29 @@ mapa_fundo = Mapa('images/background.png')
 tela_morte = Mapa('images/screen_death.png')
 
 # Funções auxiliares
+camera_x = 0  # deslocamento do mundo
+
+def camera_update(riven):
+    global camera_x
+
+    limite_camera = 742
+    limite_camera2 = 500
+
+    if riven.pos_x > limite_camera:
+         # Player trava no limite e câmera acompanha
+        camera_x += riven.vel_x  # soma velocidade para mover mundo para esquerda
+        riven.pos_x = limite_camera
+        riven.rect.topleft = (riven.pos_x, riven.pos_y)
+    if riven.pos_x < limite_camera2:
+        camera_x += riven.vel_x  # soma velocidade para mover mundo para direita
+        riven.pos_x = limite_camera2
+        riven.rect.topleft = (riven.pos_x, riven.pos_y)
+        
+
+    
 def reset_player():
     #Reseta o estado do jogador após a morte.
+    global camera_x
     riven.pos_x = 10
     riven.pos_y = 535
     riven.rect.topleft = (riven.pos_x, riven.pos_y)
@@ -30,6 +51,7 @@ def reset_player():
     riven.no_chao = False
     riven.pulo_ativo = False
     riven.tempo_pulo_atual = 0
+    camera_x = 0
 
 def handle_death_screen(teclas):
     #Exibe a tela de morte e verifica reinício
@@ -48,22 +70,21 @@ def handle_death_screen(teclas):
         death = False
         reset_player()
 
-def draw_world():
-    #Desenha o fundo, plataformas e retorna lista de colisão.
+def draw_world(camera_x):
     mapa_fundo.paint(tela)
-    cor_chao = (139, 69, 19)
 
-    # Plataformas sólidas simples
-    teto1 = pygame.draw.rect(tela, cor_chao, (700, 390, 100, 90))
-    plat1 = pygame.draw.rect(tela, cor_chao, (0, 600, 100, 250))
+    # Subtraia o deslocamento para simular movimento da câmera
+    teto1 = pygame.Rect(700 - camera_x, 500, 100, 90)
+    textura_teto1 = pygame.image.load('images/pixil-frame-0.png').convert_alpha()
+    textura_teto1 = pygame.transform.scale(textura_teto1, (teto1.width, teto1.height))
+    tela.blit(textura_teto1, teto1.topleft)
 
-    # Plataforma com textura
-    plat2 = pygame.Rect(200, 600, 1000, 170)
+    plat1 = pygame.Rect(0 - camera_x, 700, 1500, 200)
     textura_plat2 = pygame.image.load('images/chão_3-pixilart.png').convert_alpha()
-    textura_plat2 = pygame.transform.scale(textura_plat2, (plat2.width, plat2.height))
-    tela.blit(textura_plat2, plat2.topleft)
+    textura_plat2 = pygame.transform.scale(textura_plat2, (plat1.width, plat1.height))
+    tela.blit(textura_plat2, plat1.topleft)
 
-    return [plat1, plat2, teto1]
+    return [plat1, teto1]
 
 
 # Loop principal
@@ -81,8 +102,9 @@ while executando:
         pygame.display.flip()
         continue
 
-    tela.fill((0, 0, 0))
-    objetos_colisao = draw_world()
+    camera_update(riven)  # atualiza posição e câmera
+
+    objetos_colisao = draw_world(camera_x)  # desenha mundo com offset
 
     riven.mover(teclas, objetos_colisao)
     riven.desenhar(tela)

@@ -133,11 +133,6 @@ class Player:
 
         self.no_chao = colidiu_no_chao
 
-        # Limite do lado esquerdo da tela
-        if self.pos_x < 0:
-            self.pos_x = 0
-            self.rect.topleft = (self.pos_x, self.pos_y)
-
         # Atualiza animação se estiver andando
         if self.moving:
             self.tempo_anim += self.velocidade_anim
