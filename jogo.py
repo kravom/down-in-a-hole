@@ -1,5 +1,6 @@
 from player import Player
 from mapa import Mapa
+from music import Music
 from settings import *
 
 pygame.init()
@@ -15,7 +16,7 @@ executando = True
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-
+Love_Hate_Love = Music('music/Love_Hate_Love.mp3')
 mapa_fundo = Mapa('images/background.png')
 tela_morte = Mapa('images/screen_death.png')
 
@@ -118,14 +119,14 @@ while executando:
         relogio.tick(10)
         pygame.display.flip()
         continue
-
+    
     camera_update(riven)  # atualiza posição e câmera
 
     objetos_colisao = draw_world(camera_x)  # desenha mundo com offset
-
+    Love_Hate_Love
     riven.mover(teclas, objetos_colisao)
     riven.desenhar(tela)
-
+    
     # Desenha hitbox
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
 
