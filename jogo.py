@@ -1,7 +1,7 @@
 from player import Player
 from mapa import Mapa
-from music import Music
 from settings import *
+from music import Music
 
 pygame.init()
 
@@ -17,8 +17,8 @@ riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
 Love_Hate_Love = Music('music/Love_Hate_Love.mp3')
-mapa_fundo = Mapa('images/background.png')
-tela_morte = Mapa('images/screen_death.png')
+mapa = Mapa('images/background.png')
+
 
 # Funções auxiliares
 camera_x = 0  # deslocamento do mundo
@@ -57,23 +57,22 @@ def reset_player():
 def handle_death_screen(teclas):
     #Mostra a tela de morte
     global death
-    tela_morte.paint(tela)
     tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
 
-    font = pygame.font.Font('font/WOODCUT.TTF', 120)
-    font1 = pygame.font.Font('font/WOODCUT.TTF', 40)
+    font = pygame.font.Font('font/Gameplay.ttf', 120)
+    font1 = pygame.font.Font('font/Gameplay.ttf', 40)
     text_game_over = font.render("GAME-OVER", True, (139, 0, 0))
     text_restart = font1.render("Pressione R para continuar", True, (139, 0, 0))
 
-    tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 490), (WINDOW_HEIGHT // 2 - 200)))
-    tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 340), (WINDOW_HEIGHT // 2 - 30)))
+    tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 300), (WINDOW_HEIGHT // 2 - 200)))
+    tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 230), (WINDOW_HEIGHT // 2 - 30)))
 
     if teclas[pygame.K_r]:
         death = False
         reset_player()
   
 def draw_world(camera_x):
-    mapa_fundo.paint(tela)
+    mapa.paint(tela)
 
     ba = pygame.Rect(-510 - camera_x, 250, 500, 400)
     textura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
@@ -123,7 +122,7 @@ while executando:
     camera_update(riven)  # atualiza posição e câmera
 
     objetos_colisao = draw_world(camera_x)  # desenha mundo com offset
-    Love_Hate_Love
+
     riven.mover(teclas, objetos_colisao)
     riven.desenhar(tela)
     
