@@ -58,11 +58,11 @@ def handle_death_screen(teclas):
     #Mostra a tela de morte
     global death
     tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
-
+    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 900, 255))  
     font = pygame.font.Font('font/Gameplay.ttf', 120)
     font1 = pygame.font.Font('font/Gameplay.ttf', 40)
-    text_game_over = font.render("GAME-OVER", True, (139, 0, 0))
-    text_restart = font1.render("Pressione R para continuar", True, (139, 0, 0))
+    text_game_over = font.render("GAME-OVER", True,	(128,0,0))
+    text_restart = font1.render("Pressione R para continuar", True, (128,0,0))
 
     tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 300), (WINDOW_HEIGHT // 2 - 200)))
     tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 230), (WINDOW_HEIGHT // 2 - 30)))
