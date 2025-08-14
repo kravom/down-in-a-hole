@@ -17,10 +17,9 @@ riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
 Love_Hate_Love = Music('music/Love_Hate_Love.mp3')
-mapa = Mapa('images/background.png')
-
 
 # Funções auxiliares
+mapa = Mapa()
 camera_x = 0  # deslocamento do mundo
 
 def camera_update(riven):
@@ -72,9 +71,8 @@ def handle_death_screen(teclas):
         reset_player()
   
 def draw_world(camera_x):
-    mapa.paint(tela)
 
-    ba = pygame.Rect(-510 - camera_x, 250, 500, 400)
+    ba = pygame.Rect(0 - camera_x, 250, 500, 400)
     textura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
     textura_ba = pygame.transform.scale(textura_ba, (ba.width, ba.height))
     tela.blit(textura_ba, ba.topleft)
@@ -102,7 +100,11 @@ def draw_world(camera_x):
     textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
     tela.blit(textura_plat3, plat3.topleft)
 
-    return [plat1, teto1, ba, plat3, teto2]
+    plat4 = pygame.Rect(2700 - camera_x, 700, 1500, 200)
+    textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    tela.blit(textura_plat4, plat4.topleft)
+
+    return [plat1, teto1, ba, plat3, teto2, plat4]
 
 # Loop principal
 
@@ -118,7 +120,7 @@ while executando:
         relogio.tick(10)
         pygame.display.flip()
         continue
-    
+    mapa.paint(tela,camera_x)
     camera_update(riven)  # atualiza posição e câmera
 
     objetos_colisao = draw_world(camera_x)  # desenha mundo com offset
