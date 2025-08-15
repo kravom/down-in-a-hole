@@ -2,6 +2,7 @@ from player import Player
 from mapa import Mapa
 from settings import *
 from music import Music
+from hostile import Hostile
 
 pygame.init()
 
@@ -17,6 +18,8 @@ riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
 Love_Hate_Love = Music('music/Love_Hate_Love.mp3')
+cor = (250,0,0)
+enemy = Hostile(tela, 470, 470, 100 ,110, ('rivem_ani/4_riven_moviment.png'))
 
 # Funções auxiliares
 mapa = Mapa()
@@ -29,7 +32,7 @@ def camera_update(riven):
     limite_camera2 = 500
 
     if riven.pos_x > limite_camera:
-         #trava no limite e câmera acompanha
+         #trava no limite e câmera acompanhad
         camera_x += riven.vel_x  # soma velocidade para mover para esquerda
         riven.pos_x = limite_camera
         riven.rect.topleft = (riven.pos_x, riven.pos_y)
@@ -38,8 +41,6 @@ def camera_update(riven):
         riven.pos_x = limite_camera2
         riven.rect.topleft = (riven.pos_x, riven.pos_y)
         
-
-    
 def reset_player():
     #Reseta o jogador 
     global camera_x
@@ -99,11 +100,14 @@ def draw_world(camera_x):
     plat4 = pygame.Rect(4000 - camera_x, 700, 1500, 2000)
     textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat4, plat4.topleft)
+
+    plat5 = pygame.Rect(5900 - camera_x, 700, 1500, 2000)
+    textura_plat5 = pygame.transform.scale(textura_plat1, (plat1.width, height))
+    tela.blit(textura_plat5, plat5.topleft)
     
-    return [plat1, teto1, ba, plat3, teto2, plat4]
+    return [plat1, teto1, ba, plat3, teto2, plat4, plat5]
 
 # Loop principal
-
 while executando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -123,7 +127,7 @@ while executando:
 
     riven.mover(teclas, objetos_colisao)
     riven.desenhar(tela)
-    
+    enemy.draw(tela, camera_x)
     # Desenha hitbox
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
 
