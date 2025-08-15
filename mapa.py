@@ -12,4 +12,4 @@ class Mapa:
             speed = 1
             for i in self.bg_images:
                 tela.blit(i ,((x * self.bg_width) - camera_x * speed, 0))
-                speed += 0.09
+                speed += 0.03

@@ -71,7 +71,7 @@ def handle_death_screen(teclas):
         reset_player()
   
 def draw_world(camera_x):
-
+    height = 200
     ba = pygame.Rect(0 - camera_x, 250, 500, 400)
     textura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
     textura_ba = pygame.transform.scale(textura_ba, (ba.width, ba.height))
@@ -87,23 +87,19 @@ def draw_world(camera_x):
     textura_teto2 = pygame.transform.scale(textura_teto2, (teto2.width, teto2.height))
     tela.blit(textura_teto2, teto2.topleft)
 
-    plat1 = pygame.Rect(0 - camera_x, 700, 1500, 200)
+    plat1 = pygame.Rect(0 - camera_x, 700, 1500, 2000)
     textura_plat1 = pygame.image.load('images/chão.png').convert_alpha()
-    textura_plat1 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    textura_plat1 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat1, plat1.topleft)
 
-    plat2 = pygame.Rect(-510 - camera_x, 700, 500, 200)
-    textura_plat2 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
-    tela.blit(textura_plat2, plat2.topleft)
-
-    plat3 = pygame.Rect(2100 - camera_x, 700, 1500, 200)
-    textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    plat3 = pygame.Rect(2100 - camera_x, 700, 1500, 2000)
+    textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat3, plat3.topleft)
 
-    plat4 = pygame.Rect(2700 - camera_x, 700, 1500, 200)
-    textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, plat1.height))
+    plat4 = pygame.Rect(4000 - camera_x, 700, 1500, 2000)
+    textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat4, plat4.topleft)
-
+    
     return [plat1, teto1, ba, plat3, teto2, plat4]
 
 # Loop principal
@@ -132,7 +128,7 @@ while executando:
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
 
     # Morte por queda
-    if riven.pos_y >= 3000:
+    if riven.pos_y >= 2000:
         death = True
 
     # Debug
