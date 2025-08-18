@@ -129,7 +129,11 @@ while executando:
     riven.desenhar(tela)
     # Desenha hitbox
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
-    enemy.draw(tela, camera_x, riven, death)
+
+    if enemy.draw(tela, camera_x, riven):
+        death = True
+
+    
     # Morte por queda
     if riven.pos_y >= 2000:
         death = True
