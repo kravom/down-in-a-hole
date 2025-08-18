@@ -8,7 +8,7 @@ class Mapa:
             self.bg_images.append(img)
         self.bg_width = self.bg_images[0].get_width()
     def paint(self, tela, camera_x):
-        for x in range(10):
+        for x in range(7):
             speed = 1
             for i in self.bg_images:
                 tela.blit(i ,((x * self.bg_width) - camera_x * speed, 0))

@@ -1,13 +1,12 @@
 from settings import *
 class Hostile:
-    def __init__(self, tela, x, y, x1, y1, imag='images/padrao.png'):
+    def __init__(self, tela, x, y, x1, y1, imag='images/padrao.png', ):
         self.enemy = pygame.Rect(x, y, x1, y1)
         self.textura_enemy = pygame.image.load(imag).convert_alpha()
         self.textura_enemy = pygame.transform.scale(self.textura_enemy, (self.enemy.width, self.enemy.height))
         tela.blit(self.textura_enemy, self.enemy.topleft)
 
-    def draw(self, tela, camera_x):
-        
+    def draw(self, tela, camera_x, riven, handle_death_screen, teclas):
         tela.blit(self.textura_enemy, (self.enemy.x - camera_x, self.enemy.y))
         # Desenha debug
         pygame.draw.rect(

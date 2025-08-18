@@ -17,9 +17,9 @@ executando = True
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-Love_Hate_Love = Music('music/Love_Hate_Love.mp3')
+Love_Hate_Love = Music('music/Again.mp3')
 cor = (250,0,0)
-enemy = Hostile(tela, 470, 470, 100 ,110, ('rivem_ani/4_riven_moviment.png'))
+enemy = Hostile(tela, 1000, 470, 100 ,110, ('images/plat_caixa.png'))
 
 # Funções auxiliares
 mapa = Mapa()
