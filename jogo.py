@@ -19,7 +19,10 @@ riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
 Love_Hate_Love = Music('music/Again.mp3')
 cor = (250,0,0)
-enemy = Hostile(tela, 1000, 470, 100 ,110, ('images/plat_caixa.png'))
+inimigos = []
+inimigos = [
+    Hostile(tela, 1000, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10)
+]
 
 # Funções auxiliares
 mapa = Mapa()
@@ -130,8 +133,11 @@ while executando:
     # Desenha hitbox
     pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
 
-    if enemy.draw(tela, camera_x, riven):
-        death = True
+    for enemy in inimigos:
+        if enemy.draw(tela, camera_x, riven):
+            death = True
+            break  # para evitar múltiplas colisões ao mesmo tempo
+
 
     
     # Morte por queda
