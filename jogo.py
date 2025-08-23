@@ -17,7 +17,12 @@ executando = True
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-Love_Hate_Love = Music('music/Again.mp3')
+musicas = [
+    'music/Again.mp3',
+    'music/Love_Hate_Love.mp3',
+    'music/Would.mp3'
+]
+Love_Hate_Love = Music(musicas)
 cor = (250,0,0)
 inimigos = []
 inimigos = [
