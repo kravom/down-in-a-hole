@@ -19,15 +19,15 @@ riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
 musicas = [
     'music/Again.mp3',
-    'music/Love_Hate_Love.mp3',
-    'music/Would.mp3'
+    'music/Them_Bones.mp3',
+    'music/Dam_That_River.mp3'
 ]
 Love_Hate_Love = Music(musicas)
 cor = (250,0,0)
 inimigos = []
 inimigos = [
-    Hostile(tela, 1000, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10)
-]
+    Hostile(tela, 1000, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10),
+    Hostile(tela, 2300, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10)]
 
 # Funções auxiliares
 mapa = Mapa()
