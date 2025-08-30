@@ -2,8 +2,17 @@
 from settings import *
 import os
 class Hostile:
-    def __init__(self, tela, x, y, largura, altura, pasta='images/inimigos/jar', base_name='jar', frame_count=10, velocidade_anim=0.10):
-        # Área do inimigo
+    def __init__(self, tela, x, y, largura, altura, pasta='images/inimigos/jar', base_name='jar', frame_count=10, velocidade_anim=0.12):
+        self.vel_x = 0
+        self.direcao_x = 1
+        self.limite_esquerda = x
+        self.limite_direita = x
+        
+        self.vel_y = 0
+        self.direcao_y = 1
+        self.limite_superior = y
+        self.limite_inferior = y
+                # Área do inimigo
         self.enemy = pygame.Rect(x, y, largura, altura)
 
         # Carrega frames dinamicamente
@@ -47,3 +56,4 @@ class Hostile:
 
         # Verifica colisão
         return riven.rect.colliderect(enemy_pos)
+

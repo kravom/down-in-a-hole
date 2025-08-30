@@ -22,14 +22,22 @@ musicas = [
     'music/Them_Bones.mp3',
     'music/Dam_That_River.mp3'
 ]
-Love_Hate_Love = Music(musicas)
+Love_Hate_Love = Music('music/Again.mp3')
 cor = (250,0,0)
 inimigos = []
 inimigos = [
-    Hostile(tela, 1000, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10),
-    Hostile(tela, 2300, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10)]
+    Hostile(tela, 1680, 50, 250, 210, pasta='images/inimigos/sun', base_name='sun', frame_count=18),
+    Hostile(tela, 1000, 590, 100, 110, pasta='images/inimigos/jar/jar', base_name='jar', frame_count=10),
+    Hostile(tela, 2300, 590, 100, 110, pasta='images/inimigos/jar/jar', base_name='jar', frame_count=10)
+    ]
+#sun 1
+inimigos[0].vel_x = 3
+inimigos[0].limite_esquerda = 1600
+inimigos[0].limite_direita = 1800
 
-# Funções auxiliares
+inimigos[0].vel_y = 3
+inimigos[0].limite_inferior += 540
+
 mapa = Mapa()
 camera_x = 0  # deslocamento do mundo
 
@@ -66,7 +74,7 @@ def handle_death_screen(teclas):
     #Mostra a tela de morte
     global death
     tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
-    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 900, 255))  
+    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 1000, 255))  
     font = pygame.font.Font('font/Gameplay.ttf', 120)
     font1 = pygame.font.Font('font/Gameplay.ttf', 40)
     text_game_over = font.render("GAME-OVER", True,	(128,0,0))
@@ -105,11 +113,11 @@ def draw_world(camera_x):
     textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat3, plat3.topleft)
 
-    plat4 = pygame.Rect(4000 - camera_x, 700, 1500, 2000)
+    plat4 = pygame.Rect(4200 - camera_x, 700, 1500, 2000)
     textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat4, plat4.topleft)
 
-    plat5 = pygame.Rect(5900 - camera_x, 700, 1500, 2000)
+    plat5 = pygame.Rect(6300 - camera_x, 700, 1500, 2000)
     textura_plat5 = pygame.transform.scale(textura_plat1, (plat1.width, height))
     tela.blit(textura_plat5, plat5.topleft)
     
@@ -120,8 +128,19 @@ while executando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             executando = False
-
     teclas = pygame.key.get_pressed()
+
+    for enemy in inimigos:
+        if enemy.vel_x != 0:  # apenas move quem tem velocidade definida
+            enemy.enemy.x += enemy.vel_x * enemy.direcao_x
+        if enemy.enemy.x <= enemy.limite_esquerda or enemy.enemy.x >= enemy.limite_direita:
+            enemy.direcao_x *= -1
+
+    for enemy in inimigos:
+        if enemy.vel_y != 0:
+            enemy.enemy.y += enemy.vel_y * enemy.direcao_y
+        if enemy.enemy.y <= enemy.limite_superior or enemy.enemy.y >= enemy.limite_inferior:
+                enemy.direcao_y *= -1
 
     if death:
         handle_death_screen(teclas)
@@ -141,10 +160,7 @@ while executando:
     for enemy in inimigos:
         if enemy.draw(tela, camera_x, riven):
             death = True
-            break  # para evitar múltiplas colisões ao mesmo tempo
-
-
-    
+            break 
     # Morte por queda
     if riven.pos_y >= 2000:
         death = True
