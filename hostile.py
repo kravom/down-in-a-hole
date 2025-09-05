@@ -34,7 +34,7 @@ class Hostile:
         return frames if frames else [pygame.Surface((largura, altura))]  # fallback se não houver imagem
 
     def draw(self, tela, camera_x, riven):
-        """Atualiza animação, desenha inimigo e verifica colisão com jogador."""
+        #Atualiza animação, desenha inimigo e verifica colisão com jogador.
         # Atualiza frame
         self.frame_index += self.velocidade_anim
         if self.frame_index >= len(self.frames):
