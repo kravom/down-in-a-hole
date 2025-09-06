@@ -17,8 +17,30 @@ executando = True
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-#Love_Hate_Love = Music('music/Again.mp3')
-cor = (250,0,0)
+"""Love_Hate_Love = Music('music/Again.mp3')"""
+
+# ------- Carregamento único das imagens -----------------------------------------
+
+texura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
+texura_ba = pygame.transform.scale(texura_ba, (500, 400))
+
+textura_teto1 = pygame.image.load('images/plat_papelao.png').convert_alpha()
+textura_teto1 = pygame.transform.scale(textura_teto1, (100, 90))
+
+textura_teto2 = pygame.image.load('images/plat_caixa.png').convert_alpha()
+textura_teto2 = pygame.transform.scale(textura_teto2, (120, 110))
+
+textura_teto3 = pygame.transform.scale(textura_teto1, (100, 90))
+
+textura_chao = pygame.image.load('images/chão.png').convert_alpha()
+textura_chao = pygame.transform.scale(textura_chao, (1500, 200))
+
+tex_in1 = pygame.image.load('images/plat_viva.png').convert_alpha()
+tex_in1 = pygame.transform.scale(tex_in1, (700, 290))
+
+ponte1 = pygame.image.load('images/ponte_1.png').convert_alpha()
+ponte1 = pygame.transform.scale(ponte1, (1500, 400))
+# ------------------------------------------------------------------
 inimigos = []
 inimigos = [
     Hostile(tela, 1680, 50, 250, 230, pasta='images/inimigos/sun', base_name='sun', frame_count=7),
@@ -27,26 +49,73 @@ inimigos = [
     Hostile(tela, 2600, 550, 125, 150, pasta='images/inimigos/caixad', base_name='caixa', frame_count=2),
     Hostile(tela, 4000, 560, 155, 140, pasta='images/inimigos/caranguejo', base_name='caranguejo', frame_count=10),
     Hostile(tela, 5300, 560, 155, 140, pasta='images/inimigos/caranguejo', base_name='caranguejo', frame_count=10),
+    Hostile(tela, 5500, 50, 250, 230, pasta='images/inimigos/sun', base_name='sun', frame_count=7),
+    Hostile(tela, 8000, 50, 250, 230, pasta='images/inimigos/sun', base_name='sun', frame_count=7),
+    Hostile(tela, 5800, 550, 125, 150, pasta='images/inimigos/caixad', base_name='caixa', frame_count=2),
+    Hostile(tela, 7000, 550, 125, 150, pasta='images/inimigos/caixad', base_name='caixa', frame_count=2),
+    Hostile(tela, 5500, 560, 155, 140, pasta='images/inimigos/caranguejo', base_name='caranguejo', frame_count=10),
+    Hostile(tela, 8000, 550, 125, 150, pasta='images/inimigos/caixad', base_name='caixa', frame_count=2),
+    Hostile(tela, 7500, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10),
+    Hostile(tela, 6500, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10),
+    
     ]
 #sun 1
 inimigos[0].vel_x = 5
 inimigos[0].limite_esquerda = 1500
 inimigos[0].limite_direita = 1750
 
-inimigos[0].vel_y = 3
+inimigos[0].vel_y = 5
 inimigos[0].limite_inferior += 540
+
+#sun 2
+inimigos[6].vel_x = 7
+inimigos[6].limite_esquerda = 5499
+inimigos[6].limite_direita = 9200
+
+inimigos[6].vel_y = 7
+inimigos[6].limite_inferior += 420
+
+#sun 3
+inimigos[7].vel_x = 7
+inimigos[7].limite_esquerda = 5499
+inimigos[7].limite_direita = 9201
+
+inimigos[7].vel_y = 7
+inimigos[7].limite_inferior += 420
+
 #caixa 1
 inimigos[3].vel_y = 5
 inimigos[3].limite_superior -= 150
 inimigos[3].limite_inferior += 1
+
+#caixa 2
+inimigos[8].vel_y = 5
+inimigos[8].limite_superior -= 150
+inimigos[8].limite_inferior += 1
+
+#caixa 3
+inimigos[9].vel_y = 5
+inimigos[9].limite_superior -= 150
+inimigos[9].limite_inferior += 1
+
+#caixa 4
+inimigos[11].vel_y = 4
+inimigos[11].limite_superior -= 150
+inimigos[11].limite_inferior += 1
+
 #caranguejo 1
-inimigos[4].vel_x = 5
+inimigos[4].vel_x = 8
 inimigos[4].limite_esquerda = 4000
 inimigos[4].limite_direita = 5300
 #caranguejo 2
-inimigos[5].vel_x = 5
+inimigos[5].vel_x = 10
 inimigos[5].limite_esquerda = 4000
 inimigos[5].limite_direita = 5301
+
+#caranguejo 3
+inimigos[10].vel_x = 8
+inimigos[10].limite_esquerda = 5499
+inimigos[10].limite_direita = 9200
 
 mapa = Mapa()
 camera_x = 0  # deslocamento do mundo
@@ -100,46 +169,38 @@ def handle_death_screen(teclas):
 def draw_world(camera_x):
     height = 200
     ba = pygame.Rect(0 - camera_x, 250, 500, 400)
-    textura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
-    textura_ba = pygame.transform.scale(textura_ba, (ba.width, ba.height))
-    tela.blit(textura_ba, ba.topleft)
-   
+    tela.blit(texura_ba, ba.topleft)
+
     teto1 = pygame.Rect(830 - camera_x, 500, 100, 90)
-    textura_teto1 = pygame.image.load('images/plat_papelao.png').convert_alpha()
-    textura_teto1 = pygame.transform.scale(textura_teto1, (teto1.width, teto1.height))
     tela.blit(textura_teto1, teto1.topleft)
 
     teto2 = pygame.Rect(2600 - camera_x, 295, 120, 110)
-    textura_teto2 = pygame.image.load('images\plat_caixa.png').convert_alpha()
-    textura_teto2 = pygame.transform.scale(textura_teto2, (teto2.width, teto2.height))
     tela.blit(textura_teto2, teto2.topleft)
 
     teto3 = pygame.Rect(4800 - camera_x, 500, 100, 90)
-    textura_teto3 = pygame.image.load('images/plat_papelao.png').convert_alpha()
-    textura_teto3 = pygame.transform.scale(textura_teto3, (teto3.width, teto3.height))
     tela.blit(textura_teto3, teto3.topleft)
 
     plat1 = pygame.Rect(0 - camera_x, 700, 1500, 2000)
-    textura_plat1 = pygame.image.load('images/chão.png').convert_alpha()
-    textura_plat1 = pygame.transform.scale(textura_plat1, (plat1.width, height))
-    tela.blit(textura_plat1, plat1.topleft)
+    tela.blit(textura_chao, plat1.topleft)
 
     plat3 = pygame.Rect(2000 - camera_x, 700, 1500, 2000)
-    textura_plat3 = pygame.transform.scale(textura_plat1, (plat1.width, height))
-    tela.blit(textura_plat3, plat3.topleft)
+    tela.blit(textura_chao, plat3.topleft)
 
     plat4 = pygame.Rect(4000 - camera_x, 700, 1500, 2000)
-    textura_plat4 = pygame.transform.scale(textura_plat1, (plat1.width, height))
-    tela.blit(textura_plat4, plat4.topleft)
+    tela.blit(textura_chao, plat4.topleft)
 
-    plat5 = pygame.Rect(5000 - camera_x, 700, 1500, 2000)
-    textura_plat5 = pygame.transform.scale(textura_plat1, (plat1.width, height))
-    tela.blit(textura_plat5, plat5.topleft)
-   
+    plat5 = pygame.Rect(7000 - camera_x, 700, 1500, 2000)
+    tela.blit(textura_chao, plat5.topleft)
 
-   #coli da plataforma "viva"
+    plat6 = pygame.Rect(8000 - camera_x, 700, 1500, 2000)
+    tela.blit(textura_chao, plat6.topleft)
+
+    # coli da plataforma "viva"
     plat_in1 = pygame.Rect(2900 - camera_x, 500, 600, 600)
-    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1]
+    # coli da ponte
+    plat_in2 = pygame.Rect(5500 - camera_x, 700, 1500, 2000)
+
+    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6]
 
 # Loop principal
 while executando:
@@ -178,10 +239,11 @@ while executando:
     tex_in1 = pygame.image.load('images/plat_viva.png').convert_alpha()
     tex_in1 = pygame.transform.scale(tex_in1, (tex.width, tex.height))
     tela.blit(tex_in1, tex.topleft)
-    
-    # Desenha hitbox
-    pygame.draw.rect(tela, (255, 0, 0), riven.rect, 2)
 
+    ponte = pygame.Rect(5500 - camera_x, 476, 1500, 400)
+    ponte1 = pygame.image.load('images/ponte_1.png').convert_alpha()
+    ponte1 = pygame.transform.scale(ponte1, (ponte.width, ponte.height))
+    tela.blit(ponte1, ponte.topleft)
     for enemy in inimigos:
         if enemy.draw(tela, camera_x, riven):
             death = True
