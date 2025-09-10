@@ -3,6 +3,7 @@ from mapa import Mapa
 from settings import *
 from music import Music
 from hostile import Hostile
+from boss import Boss
 
 pygame.init()
 
@@ -17,7 +18,7 @@ executando = True
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-"""Love_Hate_Love = Music('music/Again.mp3')"""
+Love_Hate_Love = Music('music/Again.mp3')
 
 # ------- Carregamento único das imagens -----------------------------------------
 
@@ -165,7 +166,7 @@ def handle_death_screen(teclas):
     if teclas[pygame.K_r]:
         death = False
         reset_player()
-  
+
 def draw_world(camera_x):
     height = 200
     ba = pygame.Rect(0 - camera_x, 250, 500, 400)
@@ -195,12 +196,22 @@ def draw_world(camera_x):
     plat6 = pygame.Rect(8000 - camera_x, 700, 1500, 2000)
     tela.blit(textura_chao, plat6.topleft)
 
+    #escada final --------------------------------------------
+    ladder1 = pygame.Rect(9500- camera_x, 602, 100, 90)
+
+    ladder2 = pygame.Rect(9620- camera_x, 503, 100, 90)
+    
+    ladder3 = pygame.Rect(9735- camera_x, 405, 100, 90)
+
+    ladder4 = pygame.Rect(9850- camera_x, 307, 100, 90)
+  
+    ladder5 = pygame.Rect(9967- camera_x, 208, 240, 90)
+    #---------------------------------------------------------
     # coli da plataforma "viva"
     plat_in1 = pygame.Rect(2900 - camera_x, 500, 600, 600)
     # coli da ponte
     plat_in2 = pygame.Rect(5500 - camera_x, 700, 1500, 2000)
-
-    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6]
+    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6, ladder1, ladder2, ladder3, ladder4, ladder5]
 
 # Loop principal
 while executando:
@@ -244,6 +255,12 @@ while executando:
     ponte1 = pygame.image.load('images/ponte_1.png').convert_alpha()
     ponte1 = pygame.transform.scale(ponte1, (ponte.width, ponte.height))
     tela.blit(ponte1, ponte.topleft)
+
+    tex_ladder = pygame.Rect(9500 - camera_x, 210, 700, 490)
+    tex_ladder1 = pygame.image.load('images/ladder.png').convert_alpha()
+    tex_ladder1 = pygame.transform.scale(tex_ladder1, (tex_ladder.width, tex_ladder.height))
+    load_ladder=tela.blit(tex_ladder1, tex_ladder.topleft)
+
     for enemy in inimigos:
         if enemy.draw(tela, camera_x, riven):
             death = True
