@@ -10,10 +10,16 @@ pygame.init()
 # Configuração principal
 tela = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption('Two Beers for Alice')
+icon = pygame.image.load('images/icon.png').convert_alpha()
+pygame.display.set_icon(icon)
 relogio = pygame.time.Clock()
+
 # Estado do jogo
 death = False
 executando = True
+#-----------------
+no_menu = True 
+
 # Recursos
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
@@ -67,7 +73,7 @@ inimigos = [
     Hostile(tela, 6500, 590, 100, 110, pasta='images/inimigos/jar', base_name='jar', frame_count=10),
 ]
 
-# configurações de inimigos (igual estava)
+# configurações de inimigos
 inimigos[0].vel_x = 5
 inimigos[0].limite_esquerda = 1500
 inimigos[0].limite_direita = 1750
@@ -136,7 +142,7 @@ def reset_player():
 def handle_death_screen(teclas):
     global death, tempo_inicial
     tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
-    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 1000, 255))  
+    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 1000, 255))
     font = pygame.font.Font('font/Gameplay.ttf', 120)
     font1 = pygame.font.Font('font/Gameplay.ttf', 40)
     text_game_over = font.render("GAME-OVER", True, (128,0,0))
@@ -155,7 +161,7 @@ def draw_world(camera_x):
     tela.blit(textura_teto1, teto1.topleft)
     teto2 = pygame.Rect(2600 - camera_x, 295, 120, 110)
     tela.blit(textura_teto2, teto2.topleft)
-    teto3 = pygame.Rect(4800 - camera_x, 500, 100, 90)
+    teto3 = pygame.Rect(4800 - camera_x, 500, 120, 105)
     tela.blit(textura_teto2, teto3.topleft)
     plat1 = pygame.Rect(0 - camera_x, 700, 1500, 2000)
     tela.blit(textura_chao, plat1.topleft)
@@ -176,8 +182,33 @@ def draw_world(camera_x):
     plat_in2 = pygame.Rect(5500 - camera_x, 700, 1500, 2000)
     return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6, ladder1, ladder2, ladder3, ladder4, ladder5]
 
-# Loop principal
+# MENU INICIAL ---
+def menu_inicial():
+    # desenha o fundo do menu
+    fundo_menu = pygame.image.load('images/img_menu.png').convert()
+    fundo_menu = pygame.transform.scale(fundo_menu, (1550, 800))
+    tela.blit(fundo_menu, (0, 0))
+    pygame.display.flip()
+
+# Loop do menu inicial
+while no_menu:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            no_menu = False
+            executando = False
+    teclas = pygame.key.get_pressed()
+    if teclas[pygame.K_RETURN]:
+        no_menu = False
+    if teclas[pygame.K_ESCAPE]:
+        no_menu = False
+        executando = False
+
+    menu_inicial()
+    relogio.tick(30)
+
+# --- LOOP PRINCIPAL ---
 while executando:
+
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             executando = False
@@ -196,7 +227,6 @@ while executando:
 
     if death:
         handle_death_screen(teclas)
-        # cronômetro parado na tela de morte
         pygame.display.flip()
         relogio.tick(10)
         continue
@@ -207,7 +237,6 @@ while executando:
     riven.mover(teclas, objetos_colisao)
     riven.desenhar(tela)
 
-    # usa imagens carregadas
     tex = pygame.Rect(2840 - camera_x, 410, 700, 290)
     tela.blit(tex_in1_img, tex.topleft)
 
@@ -230,7 +259,7 @@ while executando:
     segundos = tempo_decorrido % 60
     font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
     texto_cronometro = font_cronometro.render(f"{minutos:02}:{segundos:02}", True, (255, 255, 255))
-    tela.blit(texto_cronometro, (20, 20))
+    tela.blit(texto_cronometro, (1400, 20))
 
     pygame.display.flip()
     relogio.tick(60)
