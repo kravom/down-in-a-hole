@@ -3,7 +3,6 @@ from mapa import Mapa
 from settings import *
 from music import Music
 from hostile import Hostile
-from boss import Boss
 
 pygame.init()
 
@@ -19,15 +18,12 @@ death = False
 executando = True
 #-----------------
 no_menu = True 
+fim = False
 
 # Recursos
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
-Love_Hate_Love = Music('music/Again.mp3')
-
-# Cronômetro
-tempo_inicial = pygame.time.get_ticks()
 
 # ------- Carregamento único das imagens -----------------------------------------
 texura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
@@ -53,6 +49,10 @@ ponte1_img = pygame.transform.scale(ponte1_img, (1500, 400))
 
 ladder_img = pygame.image.load('images/ladder.png').convert_alpha()
 ladder_img = pygame.transform.scale(ladder_img, (700, 490))
+
+
+img_olho = pygame.image.load('images\olho.png').convert_alpha()
+img_olho = pygame.transform.scale(img_olho, (500, 500))
 # ------------------------------------------------------------------
 
 # Inimigos
@@ -180,7 +180,13 @@ def draw_world(camera_x):
     ladder5 = pygame.Rect(9967- camera_x, 208, 240, 90)
     plat_in1 = pygame.Rect(2900 - camera_x, 500, 600, 600)
     plat_in2 = pygame.Rect(5500 - camera_x, 700, 1500, 2000)
-    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6, ladder1, ladder2, ladder3, ladder4, ladder5]
+
+    olho = pygame.Rect(10560 - camera_x, 0, 500, 500)
+    tela.blit(img_olho, olho.topleft)
+
+    plat_ceu = pygame.Rect(9500 - camera_x, 0, 1000, 1)
+
+    return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6, ladder1, ladder2, ladder3, ladder4, ladder5, olho, plat_ceu]
 
 # MENU INICIAL ---
 def menu_inicial():
@@ -206,6 +212,9 @@ while no_menu:
     menu_inicial()
     relogio.tick(30)
 
+tempo_inicial = pygame.time.get_ticks()
+music = Music('music/Again.mp3')
+
 # --- LOOP PRINCIPAL ---
 while executando:
 
@@ -214,54 +223,67 @@ while executando:
             executando = False
     teclas = pygame.key.get_pressed()
 
-    for enemy in inimigos:
-        if enemy.vel_x != 0:
-            enemy.enemy.x += enemy.vel_x * enemy.direcao_x
-        if enemy.enemy.x <= enemy.limite_esquerda or enemy.enemy.x >= enemy.limite_direita:
-            enemy.direcao_x *= -1
-    for enemy in inimigos:
-        if enemy.vel_y != 0:
-            enemy.enemy.y += enemy.vel_y * enemy.direcao_y
-        if enemy.enemy.y <= enemy.limite_superior or enemy.enemy.y >= enemy.limite_inferior:
-            enemy.direcao_y *= -1
+    if not fim:
 
-    if death:
-        handle_death_screen(teclas)
-        pygame.display.flip()
-        relogio.tick(10)
-        continue
+        for enemy in inimigos:
+            if enemy.vel_x != 0:
+                enemy.enemy.x += enemy.vel_x * enemy.direcao_x
+            if enemy.enemy.x <= enemy.limite_esquerda or enemy.enemy.x >= enemy.limite_direita:
+                enemy.direcao_x *= -1
+        for enemy in inimigos:
+            if enemy.vel_y != 0:
+                enemy.enemy.y += enemy.vel_y * enemy.direcao_y
+            if enemy.enemy.y <= enemy.limite_superior or enemy.enemy.y >= enemy.limite_inferior:
+                enemy.direcao_y *= -1
+        if death:
+            handle_death_screen(teclas)
+            pygame.display.flip()
+            relogio.tick(10)
+            continue
 
-    mapa.paint(tela,camera_x)
-    camera_update(riven)
-    objetos_colisao = draw_world(camera_x)
-    riven.mover(teclas, objetos_colisao)
-    riven.desenhar(tela)
+        mapa.paint(tela,camera_x)
+        camera_update(riven)
+        objetos_colisao = draw_world(camera_x)
+        riven.mover(teclas, objetos_colisao)
+        plat_boss = pygame.Rect(9500 - camera_x, 1000, 2000, 100)
 
-    tex = pygame.Rect(2840 - camera_x, 410, 700, 290)
-    tela.blit(tex_in1_img, tex.topleft)
 
-    ponte = pygame.Rect(5500 - camera_x, 476, 1500, 400)
-    tela.blit(ponte1_img, ponte.topleft)
+        if riven.rect.colliderect(plat_boss):
+            music.stop_music()
+            m = Music('music/Down_in_a_Hole.mp3')
+            print("coli")
+            fim = True
 
-    tex_ladder = pygame.Rect(9500 - camera_x, 210, 700, 490)
-    tela.blit(ladder_img, tex_ladder.topleft)
+        riven.desenhar(tela)
 
-    for enemy in inimigos:
-        if enemy.draw(tela, camera_x, riven):
+        tex = pygame.Rect(2840 - camera_x, 410, 700, 290)
+        tela.blit(tex_in1_img, tex.topleft)
+
+        ponte = pygame.Rect(5500 - camera_x, 476, 1500, 400)
+        tela.blit(ponte1_img, ponte.topleft)
+
+        tex_ladder = pygame.Rect(9500 - camera_x, 210, 700, 490)
+        tela.blit(ladder_img, tex_ladder.topleft)
+
+        for enemy in inimigos:
+            if enemy.draw(tela, camera_x, riven):
+                death = True
+                break 
+        if riven.pos_y >= 2000:
             death = True
-            break 
-    if riven.pos_y >= 2000:
-        death = True
 
-    # Cronômetro MM:SS
-    tempo_decorrido = (pygame.time.get_ticks() - tempo_inicial) // 1000
-    minutos = tempo_decorrido // 60
-    segundos = tempo_decorrido % 60
-    font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
-    texto_cronometro = font_cronometro.render(f"{minutos:02}:{segundos:02}", True, (255, 255, 255))
-    tela.blit(texto_cronometro, (1400, 20))
+        # Cronômetro MM:SS
+        tempo_decorrido = (pygame.time.get_ticks() - tempo_inicial) // 1000
+        minutos = tempo_decorrido // 60
+        segundos = tempo_decorrido % 60
+        font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
+        texto_cronometro = font_cronometro.render(f"{minutos:02}:{segundos:02}", True, (255, 255, 255))
+        tela.blit(texto_cronometro, (1400, 20))
 
-    pygame.display.flip()
-    relogio.tick(60)
-
+        pygame.display.flip()
+        relogio.tick(60)
+    else:     
+        pygame.display.flip()
+        relogio.tick(60)
+        
 pygame.quit()

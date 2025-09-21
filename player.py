@@ -163,6 +163,6 @@ class Player:
 
         offset_x = (imagem.get_width() - self.rect.width) // 2
         offset_y = (imagem.get_height() - self.rect.height) - ajuste_vertical
-
+        
         # Usar offsets para desenhar o sprite centralizado em relação à hitbox
         tela.blit(imagem, (int(self.pos_x - offset_x), int(self.pos_y - offset_y)))
