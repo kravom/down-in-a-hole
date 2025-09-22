@@ -16,7 +16,6 @@ relogio = pygame.time.Clock()
 # Estado do jogo
 death = False
 executando = True
-#-----------------
 no_menu = True 
 fim = False
 
@@ -24,8 +23,9 @@ fim = False
 riven = Player()
 riven_dead = pygame.image.load('images/player_dead.png').convert_alpha()
 riven_dead = pygame.transform.scale(riven_dead, (200, 215))
+tempo_fim = 0
 
-# ------- Carregamento único das imagens -----------------------------------------
+#Carrega as imagens 
 texura_ba = pygame.image.load('images/barreira/olho_barreira.png').convert_alpha()
 texura_ba = pygame.transform.scale(texura_ba, (500, 400))
 
@@ -40,7 +40,6 @@ textura_teto3 = pygame.transform.scale(textura_teto1, (100, 90))
 textura_chao = pygame.image.load('images/chão.png').convert_alpha()
 textura_chao = pygame.transform.scale(textura_chao, (1500, 200))
 
-# novas cargas fora do loop
 tex_in1_img = pygame.image.load('images/plat_viva.png').convert_alpha()
 tex_in1_img = pygame.transform.scale(tex_in1_img, (700, 290))
 
@@ -50,10 +49,8 @@ ponte1_img = pygame.transform.scale(ponte1_img, (1500, 400))
 ladder_img = pygame.image.load('images/ladder.png').convert_alpha()
 ladder_img = pygame.transform.scale(ladder_img, (700, 490))
 
-
 img_olho = pygame.image.load('images\olho.png').convert_alpha()
 img_olho = pygame.transform.scale(img_olho, (500, 500))
-# ------------------------------------------------------------------
 
 # Inimigos
 inimigos = [
@@ -112,7 +109,7 @@ inimigos[10].limite_esquerda = 5499
 inimigos[10].limite_direita = 9200
 
 mapa = Mapa()
-camera_x = 0  # deslocamento do mundo
+camera_x = 0
 
 def camera_update(riven):
     global camera_x
@@ -188,15 +185,22 @@ def draw_world(camera_x):
 
     return [plat1, teto1, ba, plat3, teto2, plat4, plat5, teto3, plat_in1, plat_in2, plat6, ladder1, ladder2, ladder3, ladder4, ladder5, olho, plat_ceu]
 
-# MENU INICIAL ---
+def reset_game():
+    global fim, death, tempo_inicial, camera_x
+    fim = False
+    death = False
+    reset_player()
+    tempo_inicial = pygame.time.get_ticks()  # zera cronômetro
+    camera_x = 0
+
+#menu
 def menu_inicial():
-    # desenha o fundo do menu
     fundo_menu = pygame.image.load('images/img_menu.png').convert()
     fundo_menu = pygame.transform.scale(fundo_menu, (1550, 800))
     tela.blit(fundo_menu, (0, 0))
     pygame.display.flip()
 
-# Loop do menu inicial
+p = Music('music/Love_Hate_Love.mp3')
 while no_menu:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -208,16 +212,22 @@ while no_menu:
     if teclas[pygame.K_ESCAPE]:
         no_menu = False
         executando = False
-
     menu_inicial()
     relogio.tick(30)
-
 tempo_inicial = pygame.time.get_ticks()
+
+#fundo ani
+bg_frames = []
+for i in range(1, 7):  
+    frame = pygame.image.load(f'images/screen_end({i}).png').convert()
+    frame = pygame.transform.scale(frame, (1550, 800))
+    bg_frames.append(frame)
+bg_index = 0  #atual do frame
+
 music = Music('music/Again.mp3')
 
 # --- LOOP PRINCIPAL ---
 while executando:
-
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             executando = False
@@ -247,11 +257,10 @@ while executando:
         riven.mover(teclas, objetos_colisao)
         plat_boss = pygame.Rect(9500 - camera_x, 1000, 2000, 100)
 
-
         if riven.rect.colliderect(plat_boss):
             music.stop_music()
             m = Music('music/Down_in_a_Hole.mp3')
-            print("coli")
+            tempo_fim = pygame.time.get_ticks() - tempo_inicial
             fim = True
 
         riven.desenhar(tela)
@@ -267,23 +276,54 @@ while executando:
 
         for enemy in inimigos:
             if enemy.draw(tela, camera_x, riven):
-                death = True
+                #death = True
                 break 
         if riven.pos_y >= 2000:
             death = True
 
-        # Cronômetro MM:SS
-        tempo_decorrido = (pygame.time.get_ticks() - tempo_inicial) // 1000
-        minutos = tempo_decorrido // 60
-        segundos = tempo_decorrido % 60
+       # Cronômetro SS:MS
+        tempo_decorrido = pygame.time.get_ticks() - tempo_inicial
+        segundos = (tempo_decorrido // 1000) % 60
+        milissegundos = (tempo_decorrido % 1000) // 10  # dois dígitos para ms
         font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
-        texto_cronometro = font_cronometro.render(f"{minutos:02}:{segundos:02}", True, (255, 255, 255))
+        texto_cronometro = font_cronometro.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
         tela.blit(texto_cronometro, (1400, 20))
+        pygame.display.flip()
+        relogio.tick(60)
+
+    else:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                no_menu = False
+                executando = False
+        teclas = pygame.key.get_pressed()
+        if teclas[pygame.K_RETURN]:
+            music = Music('music/Again.mp3')
+            reset_game()   # reinicia
+
+        if teclas[pygame.K_ESCAPE]:
+            executando = False
+
+        # Atualiza frame do fundo 
+        bg_index += 0.1
+        if bg_index >= len(bg_frames):
+            bg_index = 0
+        tela.blit(bg_frames[int(bg_index)], (0, 0))
+
+        font = pygame.font.Font('font/Gameplay.ttf', 20)
+        txt_end = font.render("Presione ENTER para jogar novamente", True, (255, 255, 255))
+        tela.blit(txt_end, (1270 // 2 - 100, 1100 // 2 + 100))
+        txt_end2 = font.render("ESC para sair", True, (255, 255, 255))
+        tela.blit(txt_end2, (1580 // 2 - 100, 1200 // 2 + 100))
+
+        # Converte tempo_fim em segundos e milissegundos (dois dígitos)
+        segundos = (tempo_fim // 1000) % 60
+        milissegundos = (tempo_fim % 1000) // 10  # dois dígitos para MS
+        font = pygame.font.Font('font/Gameplay.ttf', 80)
+        texto_tempo = font.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
+        tela.blit(texto_tempo, (1500 // 2 - 100, 800 // 2 + 100))
 
         pygame.display.flip()
         relogio.tick(60)
-    else:     
-        pygame.display.flip()
-        relogio.tick(60)
-        
+  
 pygame.quit()
