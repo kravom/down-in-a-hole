@@ -281,13 +281,18 @@ while executando:
         if riven.pos_y >= 2000:
             death = True
 
-       # Cronômetro SS:MS
+       # Cronômetro sem reiniciar segundos (com ms)
         tempo_decorrido = pygame.time.get_ticks() - tempo_inicial
-        segundos = (tempo_decorrido // 1000) % 60
-        milissegundos = (tempo_decorrido % 1000) // 10  # dois dígitos para ms
+        # segundos desde o início (não reinicia)
+        segundos = tempo_decorrido // 1000      
+        # milissegundos (dois dígitos, continua normalmente)
+        milissegundos = (tempo_decorrido % 1000) // 10  
+
         font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
-        texto_cronometro = font_cronometro.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
+        texto_cronometro = font_cronometro.render(
+            f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
         tela.blit(texto_cronometro, (1400, 20))
+
         pygame.display.flip()
         relogio.tick(60)
 
