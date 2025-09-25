@@ -46,7 +46,7 @@ class Player:
         self.pos_y = 535
         self.vel_max = 10
         self.vel_x = 0
-        self.atrito = 0.5
+        self.atrito = 0.6
 
         self.vel_y = 0
         self.gravidade = 0.5

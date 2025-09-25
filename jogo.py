@@ -8,6 +8,7 @@ pygame.init()
 
 # Configuração principal
 tela = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+
 pygame.display.set_caption('Two Beers for Alice')
 icon = pygame.image.load('images/icon.png').convert_alpha()
 pygame.display.set_icon(icon)
@@ -276,7 +277,7 @@ while executando:
 
         for enemy in inimigos:
             if enemy.draw(tela, camera_x, riven):
-                #death = True
+                death = True
                 break 
         if riven.pos_y >= 2000:
             death = True
