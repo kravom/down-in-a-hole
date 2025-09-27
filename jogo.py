@@ -7,7 +7,7 @@ from hostile import Hostile
 pygame.init()
 
 # Configuração principal
-tela = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+tela = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 pygame.display.set_caption('Two Beers for Alice')
 icon = pygame.image.load('images/icon.png').convert_alpha()
@@ -139,14 +139,33 @@ def reset_player():
 
 def handle_death_screen(teclas):
     global death, tempo_inicial
-    tela.blit(riven_dead, ((WINDOW_WIDTH // 2 + 40), (WINDOW_HEIGHT // 2 + 100)))
-    pygame.draw.rect(tela, (0, 0, 0), (300, 150, 1000, 255))
-    font = pygame.font.Font('font/Gameplay.ttf', 120)
-    font1 = pygame.font.Font('font/Gameplay.ttf', 40)
-    text_game_over = font.render("GAME-OVER", True, (128,0,0))
-    text_restart = font1.render("Pressione R para continuar", True, (128,0,0))
-    tela.blit(text_game_over, ((WINDOW_WIDTH // 2 - 300), (WINDOW_HEIGHT // 2 - 200)))
-    tela.blit(text_restart, ((WINDOW_WIDTH // 2 - 230), (WINDOW_HEIGHT // 2 - 30)))
+    tela.fill((74, 70, 70))
+
+    tela.blit(
+        riven_dead,
+        (WINDOW_WIDTH // 2 - riven_dead.get_width() // 2,
+         WINDOW_HEIGHT // 2 + riven_dead.get_height() // 2))
+    
+    font_size_big = max(40, WINDOW_WIDTH // 15)
+    font_size_small = max(20, WINDOW_WIDTH // 48)
+    font = pygame.font.Font('font/Gameplay.ttf', font_size_big)
+    font1 = pygame.font.Font('font/Gameplay.ttf', font_size_small)
+
+    text_game_over = font.render("GAME-OVER", True, (128, 0, 0))
+    text_restart = font1.render("Pressione R para continuar", True, (128, 0, 0))
+
+    rect_w = int(WINDOW_WIDTH * 0.6)
+    rect_h = int(WINDOW_HEIGHT * 0.3)
+    rect_x = (WINDOW_WIDTH - rect_w) // 2
+    rect_y = (WINDOW_HEIGHT - rect_h) // 3
+    
+    # centraliza os textos
+    tela.blit(
+        text_game_over,
+        (WINDOW_WIDTH // 2 - text_game_over.get_width() // 2,
+         rect_y + rect_h // 6))
+    tela.blit(text_restart,(WINDOW_WIDTH // 2 - text_restart.get_width() // 2,rect_y + rect_h * 0.8))
+
     if teclas[pygame.K_r]:
         death = False
         reset_player()
@@ -197,7 +216,7 @@ def reset_game():
 #menu
 def menu_inicial():
     fundo_menu = pygame.image.load('images/img_menu.png').convert()
-    fundo_menu = pygame.transform.scale(fundo_menu, (1550, 800))
+    fundo_menu = pygame.transform.scale(fundo_menu, (WINDOW_WIDTH, WINDOW_HEIGHT))
     tela.blit(fundo_menu, (0, 0))
     pygame.display.flip()
 
@@ -290,9 +309,11 @@ while executando:
         milissegundos = (tempo_decorrido % 1000) // 10  
 
         font_cronometro = pygame.font.Font('font/Gameplay.ttf', 40)
-        texto_cronometro = font_cronometro.render(
-            f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
+        texto_cronometro = font_cronometro.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
         tela.blit(texto_cronometro, (1400, 20))
+
+        if teclas[pygame.K_ESCAPE]:
+            executando = False
 
         pygame.display.flip()
         relogio.tick(60)
@@ -312,24 +333,40 @@ while executando:
 
         # Atualiza frame do fundo 
         bg_index += 0.1
+        # Pegue largura e altura atuais da tela
+        largura_tela, altura_tela = WINDOW_WIDTH, WINDOW_HEIGHT
+
+        # Atualiza índice do fundo
         if bg_index >= len(bg_frames):
             bg_index = 0
-        tela.blit(bg_frames[int(bg_index)], (0, 0))
+        tela.blit(pygame.transform.scale(bg_frames[int(bg_index)], (WINDOW_WIDTH, WINDOW_HEIGHT)), (0, 0))
 
-        font = pygame.font.Font('font/Gameplay.ttf', 20)
-        txt_end = font.render("Presione ENTER para jogar novamente", True, (255, 255, 255))
-        tela.blit(txt_end, (1270 // 2 - 100, 1100 // 2 + 100))
-        txt_end2 = font.render("ESC para sair", True, (255, 255, 255))
-        tela.blit(txt_end2, (1580 // 2 - 100, 1200 // 2 + 100))
+        # Defina tamanhos proporcionais
+        font_size_small = int(altura_tela * 0.02)  # 2% da altura para fontes pequenas
+        font_size_large = int(altura_tela * 0.07)  # 7% da altura para fonte do tempo
+
+        # Fonte pequena (textos de instrução)
+        font_small = pygame.font.Font('font/Gameplay.ttf', font_size_small)
+
+        txt_end = font_small.render("Presione ENTER para jogar novamente", True, (255, 255, 255))
+        txt_end2 = font_small.render("ESC para sair", True, (255, 255, 255))
+
+        # Posiciona proporcionalmente
+        tela.blit(txt_end, (largura_tela * 0.365, altura_tela * 0.8))
+        tela.blit(txt_end2, (largura_tela * 0.4495, altura_tela * 0.85))
 
         # Converte tempo_fim em segundos e milissegundos (dois dígitos)
         segundos = (tempo_fim // 1000) % 60
-        milissegundos = (tempo_fim % 1000) // 10  # dois dígitos para MS
-        font = pygame.font.Font('font/Gameplay.ttf', 80)
-        texto_tempo = font.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
-        tela.blit(texto_tempo, (1500 // 2 - 100, 800 // 2 + 100))
+        milissegundos = (tempo_fim % 1000) // 10
+
+        # Fonte grande (tempo)
+        font_large = pygame.font.Font('font/Gameplay.ttf', font_size_large)
+        texto_tempo = font_large.render(f"{segundos:02}:{milissegundos:02}", True, (255, 255, 255))
+
+        # Centraliza o tempo no meio da tela
+        texto_rect = texto_tempo.get_rect(center=(largura_tela // 2, altura_tela * 0.7))
+        tela.blit(texto_tempo, texto_rect)
 
         pygame.display.flip()
         relogio.tick(60)
-  
 pygame.quit()
